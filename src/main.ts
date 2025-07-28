@@ -1,13 +1,23 @@
-import 'tdesign-vue-next/es/style/index.css';
+/**
+ * main.ts
+ *
+ * Bootstraps Vuetify and other plugins then mounts the App`
+ */
 
+// Composables
 import { createApp } from 'vue'
+
+// Plugins
+import { registerPlugins } from '@/plugins'
+
+// Components
 import App from './App.vue'
-import router from './router'
-import TDesign from 'tdesign-vue-next';
+
+// Styles
+import 'unfonts.css'
 
 const app = createApp(App)
 
-app.use(router)
-app.use(TDesign)
+registerPlugins(app)
 
 app.mount('#app')
