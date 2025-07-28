@@ -1,1 +1,0 @@
-import{_ as t,c as o,a as r,o as a}from"./index-DcvzXm-j.js";const n={};function s(c,e){return a(),o("div",null,e[0]||(e[0]=[r("a",{href:"https://github.com/ShangYJQ"},"去我的Github",-1)]))}const f=t(n,[["render",s]]);export{f as default};
