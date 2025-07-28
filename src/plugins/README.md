@@ -1,3 +1,3 @@
 # Plugins
 
-Plugins are a way to extend the functionality of your Vue application. Use this folder for registering plugins that you want to use globally.
+插件是扩展VUE应用程序功能的一种方法。使用此文件夹进行注册您要在全局使用的插件。
