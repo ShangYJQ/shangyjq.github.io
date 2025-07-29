@@ -1,8 +1,9 @@
-name: build and deploy github page
+name: build and deploy to aliserver
 
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -53,6 +54,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-dir
+
+      - name: ls
+        run: |
+          ls
+          pwd
       
       - name: 使用密码 scp 文件夹到云服务器
         uses: appleboy/scp-action@master
