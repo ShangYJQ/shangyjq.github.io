@@ -50,7 +50,22 @@ jobs:
         run: |
           tar -xvf artifact.tar
           rm -f artifact.tar
+      - name: 在远程服务器上执行命令
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWD }}
+          script: |
+            echo "成功连接到服务器!"
+            cd ${{ secrets.SERVER_PATH }}
+            echo "当前所在目录:"
+            pwd
+            echo "列出当前目录文件:"
+            ls
+            rm -rf *
 
+            
       - name: 使用密码 scp 文件夹到云服务器
         uses: appleboy/scp-action@master
         with:
@@ -59,3 +74,5 @@ jobs:
           password: ${{ secrets.SERVER_PASSWD }}
           source: "."
           target: ${{ secrets.SERVER_PATH }}
+
+      
