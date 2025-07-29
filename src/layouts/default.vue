@@ -2,7 +2,7 @@
   <v-main>
     <FrostedGlassPanel
       alt="Background"
-      :bg-src="bgImg"
+      :bg-src="imgSrc"
       height="100%"
       width="100%"
     >
@@ -18,5 +18,8 @@
 <script lang="ts" setup>
 // Import静态资源
 
-  import bgImg from '@/assets/alpha.png'
+  import { getAssetsFile } from '@/utils/pub-use.ts'
+
+  const imgSrc = getAssetsFile('alpha.png')
+
 </script>

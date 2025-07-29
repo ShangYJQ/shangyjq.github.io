@@ -30,6 +30,26 @@
       @keydown.enter="enterDown"
     />
 
+    <v-container>
+
+      <v-dialog v-model="dialog" class="opacity-90" max-width="500">
+        <v-card>
+          <v-card-title class="headline">
+            提示
+          </v-card-title>
+          <v-card-text>
+            {{ showMsg }}
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="blue darken-1" text @click="dialog = false">
+              关闭
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-container>
+
   </v-container>
 
 </template>
@@ -38,6 +58,7 @@
 //
 
   import { ref } from 'vue'
+  import { useAi } from '@/hooks/useAi.ts'
 
   const inputText = ref<string>('')
 
@@ -45,14 +66,32 @@
 
   const defaultMsg = 'Input'
 
+  const dialog = ref<boolean>(false)
+
   const msgList = {
     杨佳琪: '这不就是我吗！',
     潘佳丽: '芜湖！爱你！',
+    黄瑾: '快说，你把潘佳丽藏在哪里了？',
+    柴犬: '真的没办法拒绝!',
   }
 
-  function enterDown () {
-    showMsg.value = inputText.value in msgList ? msgList[inputText.value as keyof typeof msgList] : '你好！'
-    console.log(showMsg.value)
+  async function enterDown () {
+    const userInput = inputText.value // 先保存用户输入
+
+    dialog.value = true
+    // 检查是否是预设消息
+    if (userInput in msgList) {
+      showMsg.value = msgList[userInput as keyof typeof msgList]
+    } else {
+      showMsg.value = '思考中，请稍候...'
+
+      const aiResult = await useAi(userInput)
+
+      showMsg.value = aiResult || '抱歉，我遇到了一点问题，请稍后再试。'
+    }
+
+    console.log('Final showMsg.value:', showMsg.value) // 这里会打印出最终的字符串
+
     inputText.value = ''
   }
 

@@ -27,7 +27,6 @@
         padding: paddingInPx
       }"
     >
-      <!-- 3. 内容插槽，用于放置自定义内容 -->
       <slot />
     </div>
   </div>
@@ -50,7 +49,7 @@
     },
     overlayColor: {
       type: String,
-      default: 'rgba(31,31,31,0.25)',
+      default: 'rgba(21,21,21,0.25)',
     },
     width: {
       type: String,
