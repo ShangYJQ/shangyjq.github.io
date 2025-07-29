@@ -1,0 +1,64 @@
+name: build and deploy github page
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout 仓库源码
+        uses: actions/checkout@v4
+
+      - name: 准备编译环境
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nodejs
+          npm -v
+
+      - name: 安装编译依赖
+        run: npm install
+
+      - name: 编译项目
+        run: |
+          pwd
+          npm run build
+
+      - name: 查看 dist 文件夹
+        run: |
+          ls dist/
+
+      - name: 上传 dist 📦
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: dist-dir
+          path: "./dist"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 从 build 下载 dist 文件夹
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-dir
+      
+      - name: 使用密码 scp 文件夹到云服务器
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWD }}
+          source: "."
+          target: ${{ secrets.SERVER_PATH }}
