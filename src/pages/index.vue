@@ -80,14 +80,15 @@
 
     dialog.value = true
     // 检查是否是预设消息
+    // eslint-disable-next-line unicorn/prefer-ternary
     if (userInput in msgList) {
       showMsg.value = msgList[userInput as keyof typeof msgList]
     } else {
-      showMsg.value = '思考中，请稍候...'
-
-      const aiResult = await useAi(userInput)
-
-      showMsg.value = aiResult || '抱歉，我遇到了一点问题，请稍后再试。'
+      showMsg.value = 'AI功能维护中...'
+      //
+      // const aiResult = await useAi(userInput)
+      //
+      // showMsg.value = aiResult || '抱歉，我遇到了一点问题，请稍后再试。'
     }
 
     console.log('Final showMsg.value:', showMsg.value) // 这里会打印出最终的字符串
