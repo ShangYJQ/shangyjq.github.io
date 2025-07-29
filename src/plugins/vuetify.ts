@@ -14,7 +14,7 @@ import 'vuetify/styles'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   // 改为服务端渲染
-  // ssr: true,
+  ssr: true,
   theme: {
     defaultTheme: 'system',
   },
