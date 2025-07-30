@@ -14,6 +14,7 @@ jobs:
 
       - name: 准备编译环境
         run: |
+          sudo apt-get remove man-db
           sudo apt-get update
           sudo apt-get install -y nodejs
           npm -v
