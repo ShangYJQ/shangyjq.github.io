@@ -27,38 +27,27 @@
       rounded="rounded"
       style="width: 30%"
       variant="outlined"
-      @keydown.enter="checkIogin"
     />
 
     <v-text-field
       v-model="inputPassWord"
       class="mt-2"
+      hint="Enter your password to access this website"
       label="password"
       rounded="rounded"
       style="width: 30%"
       variant="outlined"
-      @keydown.enter="checkIogin"
     />
 
-    <!--    <v-container>
-
-      <v-dialog v-model="dialog" class="opacity-90" max-width="500">
-        <v-card>
-          <v-card-title class="headline">
-            提示
-          </v-card-title>
-          <v-card-text>
-            {{ showMsg }}
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="blue darken-1" text @click="dialog = false">
-              关闭
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>-->
+    <v-btn
+      class="opacity-80 mt-12"
+      :disabled="loading"
+      :icon="mdiLogin"
+      :loading="loading"
+      size="x-large"
+      variant="outlined"
+      @click="clickLogin"
+    />
 
   </v-container>
 
@@ -67,13 +56,45 @@
 <script lang="ts" setup>
 //
 
-  import { ref } from 'vue'
+  import { mdiLogin } from '@mdi/js'
+  import { ref, watch } from 'vue'
+  import { useRouter } from 'vue-router'
   import useSQL from '@/hooks/useSQL.ts'
+
+  import { useAppStore } from '@/stores/app.ts'
 
   const inputUserName = ref<string>('')
   const inputPassWord = ref<string>('')
 
-  function checkIogin () {}
+  const loading = ref(false)
+  const router = useRouter()
+  const appStore = useAppStore()
+
+  async function clickLogin () {
+    loading.value = true
+
+    const value = [inputUserName.value]
+
+    if (inputPassWord.value === '' || inputPassWord.value === '') {
+      console.log('input first')
+      loading.value = false
+      return
+    }
+
+    const result = await useSQL('SELECT', value)
+    const passwd = result[0]['passwd']
+    if (inputPassWord.value === passwd) {
+      console.log('Login')
+      loading.value = false
+      appStore.isLoggedIn = true
+      await router.push('/main')
+    }
+  }
+
+  watch(loading, val => {
+    if (!val) return
+    setTimeout(() => (loading.value = false), 5000)
+  })
 
 </script>
 

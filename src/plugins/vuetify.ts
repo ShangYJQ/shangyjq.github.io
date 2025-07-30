@@ -6,6 +6,9 @@
 
 // Composables
 import { createVuetify } from 'vuetify'
+
+import { mdi } from 'vuetify/iconsets/mdi-svg'
+
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 
@@ -17,5 +20,11 @@ export default createVuetify({
   ssr: true,
   theme: {
     defaultTheme: 'system',
+  },
+  icons: {
+    defaultSet: 'mdi',
+    sets: {
+      mdi,
+    },
   },
 })

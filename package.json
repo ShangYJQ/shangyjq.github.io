@@ -13,8 +13,9 @@
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.6",
-    "@mdi/font": "7.4.47",
+    "@mdi/js": "^7.4.47",
     "axios": "^1.11.0",
+    "cors": "^2.8.5",
     "mysql": "^2.18.1",
     "openai": "^5.10.2",
     "pinia": "^3.0.3",
@@ -22,6 +23,7 @@
     "vuetify": "^3.9.1"
   },
   "devDependencies": {
+    "@mdi/font": "^7.4.47",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.9.0",
     "@vitejs/plugin-vue": "^5.2.3",

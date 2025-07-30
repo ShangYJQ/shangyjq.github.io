@@ -37,10 +37,12 @@
 </template>
 
 <script setup lang="ts">
+
+  import { mdiGithub } from '@mdi/js'
   const items = [
     {
       title: 'My GitHub',
-      icon: `mdi-github`,
+      icon: mdiGithub,
       href: 'https://github.com/ShangYJQ',
     },
 
