@@ -5,9 +5,9 @@
   >
 
     <v-avatar
-      class="elevation-4 mt-16"
+      class="elevation-4 mt-12"
       color="grey-lighten-3"
-      :size="240"
+      :size="230"
     >
       <v-img
         alt="ShangYJQ"
@@ -42,12 +42,20 @@
     <v-btn
       class="opacity-80 mt-12"
       :disabled="loading"
-      :icon="mdiLogin"
+      :icon="btnImg"
       :loading="loading"
       size="x-large"
       variant="outlined"
-      @click="clickLogin"
+      @click="btnImg===mdiLogin?clickLogin():clickRegister()"
     />
+
+    <v-btn
+      class="bottom-right-btn"
+      variant="plain"
+      @click="btnImg===mdiAccountPlusOutline?btnImg=mdiLogin:btnImg=mdiAccountPlusOutline"
+    >
+      {{ btnImg === mdiLogin ? "Don't have an account? Sign in" : "Already have an account? Sign up" }}
+    </v-btn>
 
   </v-container>
 
@@ -56,7 +64,7 @@
 <script lang="ts" setup>
 //
 
-  import { mdiLogin } from '@mdi/js'
+  import { mdiAccountPlusOutline, mdiLogin } from '@mdi/js'
   import { ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import useSQL from '@/hooks/useSQL.ts'
@@ -70,6 +78,8 @@
   const router = useRouter()
   const appStore = useAppStore()
 
+  const btnImg = ref(mdiLogin)
+
   async function clickLogin () {
     loading.value = true
 
@@ -82,12 +92,42 @@
     }
 
     const result = await useSQL('SELECT', value)
+
+    if (result.length === 0) {
+      console.log('register first')
+      loading.value = false
+      return
+    }
+
     const passwd = result[0]['passwd']
     if (inputPassWord.value === passwd) {
       console.log('Login')
       loading.value = false
       appStore.isLoggedIn = true
       await router.push('/main')
+    } else {
+      loading.value = false
+      console.log('password error')
+    }
+  }
+
+  async function clickRegister () {
+    const value = [inputUserName.value, inputPassWord.value]
+    if (inputPassWord.value === '' || inputPassWord.value === '') {
+      console.log('Please input first')
+    }
+
+    const tmp = await useSQL('SELECT', [inputUserName.value])
+    if (tmp.length > 0) {
+      console.log('You already have an account? Sign in')
+      loading.value = false
+      return
+    }
+    const result = await useSQL('INSERT', value)
+    if (result['affectedRows'] === 1) {
+      console.log('Register successfully')
+    } else {
+      console.log('Register failed')
     }
   }
 
@@ -106,7 +146,15 @@
   background-clip: text;
   color: transparent;
   text-shadow: 1px 1px 2px rgb(120, 35, 145);
+}
 
+.bottom-right-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+
+  font-size: 9px;
+  color: #888;
 }
 
 </style>
