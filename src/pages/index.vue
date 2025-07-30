@@ -21,16 +21,26 @@
     </div>
 
     <v-text-field
-      v-model="inputText"
+      v-model="inputUserName"
       class="mt-16"
-      :label="defaultMsg"
+      label="username"
       rounded="rounded"
       style="width: 30%"
       variant="outlined"
-      @keydown.enter="enterDown"
+      @keydown.enter="checkIogin"
     />
 
-    <v-container>
+    <v-text-field
+      v-model="inputPassWord"
+      class="mt-2"
+      label="password"
+      rounded="rounded"
+      style="width: 30%"
+      variant="outlined"
+      @keydown.enter="checkIogin"
+    />
+
+    <!--    <v-container>
 
       <v-dialog v-model="dialog" class="opacity-90" max-width="500">
         <v-card>
@@ -48,7 +58,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-container>
+    </v-container>-->
 
   </v-container>
 
@@ -58,43 +68,12 @@
 //
 
   import { ref } from 'vue'
-  import { useAi } from '@/hooks/useAi.ts'
+  import useSQL from '@/hooks/useSQL.ts'
 
-  const inputText = ref<string>('')
+  const inputUserName = ref<string>('')
+  const inputPassWord = ref<string>('')
 
-  const showMsg = ref<string>('空')
-
-  const defaultMsg = 'Input'
-
-  const dialog = ref<boolean>(false)
-
-  const msgList = {
-    杨佳琪: '这不就是我吗！',
-    潘佳丽: '芜湖！爱你！',
-    黄瑾: '快说，你把潘佳丽藏在哪里了？',
-    柴犬: '真的没办法拒绝!',
-  }
-
-  async function enterDown () {
-    const userInput = inputText.value // 先保存用户输入
-
-    dialog.value = true
-    // 检查是否是预设消息
-    // eslint-disable-next-line unicorn/prefer-ternary
-    if (userInput in msgList) {
-      showMsg.value = msgList[userInput as keyof typeof msgList]
-    } else {
-      showMsg.value = 'AI功能维护中...'
-      //
-      // const aiResult = await useAi(userInput)
-      //
-      // showMsg.value = aiResult || '抱歉，我遇到了一点问题，请稍后再试。'
-    }
-
-    console.log('Final showMsg.value:', showMsg.value) // 这里会打印出最终的字符串
-
-    inputText.value = ''
-  }
+  function checkIogin () {}
 
 </script>
 

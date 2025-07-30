@@ -3,7 +3,6 @@ name: build and deploy to aliserver
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:
 
 jobs:
   build:
