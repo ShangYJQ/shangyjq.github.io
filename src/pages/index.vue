@@ -4,7 +4,6 @@
     class="d-flex flex-column align-center justify-center"
   >
 
-    <SliderAlert ref="alertRef" />
     <v-avatar
       class="elevation-4 mt-12"
       color="grey-lighten-3"

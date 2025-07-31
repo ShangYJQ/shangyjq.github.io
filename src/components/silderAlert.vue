@@ -55,11 +55,8 @@
   right: 0;
   z-index: 9999;
   width: 100%;
-  max-width: 400px;
+  max-width: 25%;
   pointer-events: none;
 }
 
-.alert-container .v-alert {
-  pointer-events: auto;
-}
 </style>

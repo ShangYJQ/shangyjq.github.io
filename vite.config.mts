@@ -1,16 +1,16 @@
-import { fileURLToPath, URL } from 'node:url'
+import {fileURLToPath, URL} from 'node:url'
 import Vue from '@vitejs/plugin-vue'
 // Plugins
 import AutoImport from 'unplugin-auto-import/vite'
 import Fonts from 'unplugin-fonts/vite'
 import Components from 'unplugin-vue-components/vite'
-import { VueRouterAutoImports } from 'unplugin-vue-router'
+import {VueRouterAutoImports} from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 // Utilities
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
 
 import Layouts from 'vite-plugin-vue-layouts-next'
-import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import Vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -37,7 +37,7 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
     Vue({
-      template: { transformAssetUrls },
+      template: {transformAssetUrls},
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify({
@@ -67,7 +67,7 @@ export default defineConfig({
       'unplugin-vue-router/data-loaders/basic',
     ],
   },
-  define: { 'process.env': {} },
+  define: {'process.env': {}},
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('src', import.meta.url)),
@@ -87,12 +87,8 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      sass: {
-        api: 'modern-compiler',
-      },
-      scss: {
-        api: 'modern-compiler',
-      },
+      sass: {},
+      scss: {},
     },
   },
 })

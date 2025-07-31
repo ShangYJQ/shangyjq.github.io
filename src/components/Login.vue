@@ -1,5 +1,7 @@
 <template>
 
+  <SliderAlert ref="alertRef" />
+
   <v-text-field
     v-model="inputUserName"
     class="mt-16"
@@ -41,10 +43,10 @@
 
 <script setup lang="ts">
 
-  import type SliderAlert from '@/components/silderAlert.vue'
   import { mdiAccountPlusOutline, mdiLogin } from '@mdi/js'
   import { ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
+  import SliderAlert from '@/components/silderAlert.vue'
   import useSQL from '@/hooks/useSQL.ts'
   import { useAppStore } from '@/stores/app.ts'
 
