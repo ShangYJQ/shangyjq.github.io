@@ -12,5 +12,7 @@ declare module 'vue' {
     FrostedGlassPanel: typeof import('./components/FrostedGlassPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SilderAlert: typeof import('./components/silderAlert.vue')['default']
+    SilderAllert: typeof import('./components/silderAllert.vue')['default']
   }
 }

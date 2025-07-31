@@ -4,6 +4,7 @@
     class="d-flex flex-column align-center justify-center"
   >
 
+    <SliderAlert ref="alertRef" />
     <v-avatar
       class="elevation-4 mt-12"
       color="grey-lighten-3"
@@ -25,7 +26,7 @@
       class="mt-16"
       label="username"
       rounded="rounded"
-      style="width: 30%"
+      style="width: 340px"
       variant="outlined"
     />
 
@@ -35,12 +36,12 @@
       hint="Enter your password to access this website"
       label="password"
       rounded="rounded"
-      style="width: 30%"
+      style="width: 340px"
       variant="outlined"
     />
 
     <v-btn
-      class="opacity-80 mt-12"
+      class="opacity-80 mt-9"
       :disabled="loading"
       :icon="btnImg"
       :loading="loading"
@@ -67,6 +68,8 @@
   import { mdiAccountPlusOutline, mdiLogin } from '@mdi/js'
   import { ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
+  import SliderAlert from '@/components/silderAlert.vue'
+
   import useSQL from '@/hooks/useSQL.ts'
 
   import { useAppStore } from '@/stores/app.ts'
@@ -80,12 +83,36 @@
 
   const btnImg = ref(mdiLogin)
 
+  const alertRef = ref<InstanceType<typeof SliderAlert> | null>(null)
+
+  const showSuccessMessage = (msg: string) => {
+    // 确保 ref.value 存在 (组件已挂载)
+    if (alertRef.value) {
+      alertRef.value.sliderAlertShow(
+        'success', // state
+        'success', // title
+        msg, // text
+      )
+    }
+  }
+
+  const showErrorMessage = (msg: string) => {
+    if (alertRef.value) {
+      alertRef.value.sliderAlertShow(
+        'error',
+        'error',
+        msg,
+      )
+    }
+  }
+
   async function clickLogin () {
     loading.value = true
 
     const value = [inputUserName.value]
 
     if (inputPassWord.value === '' || inputPassWord.value === '') {
+      showErrorMessage('Please input first')
       console.log('input first')
       loading.value = false
       return
@@ -94,13 +121,16 @@
     const result = await useSQL('SELECT', value)
 
     if (result.length === 0) {
+      showErrorMessage('Please register first')
       console.log('register first')
+
       loading.value = false
       return
     }
 
     const passwd = result[0]['passwd']
     if (inputPassWord.value === passwd) {
+      showSuccessMessage('Login successful')
       console.log('Login')
       loading.value = false
       appStore.isLoggedIn = true
@@ -108,25 +138,30 @@
     } else {
       loading.value = false
       console.log('password error')
+      showErrorMessage('password error')
     }
   }
 
   async function clickRegister () {
     const value = [inputUserName.value, inputPassWord.value]
     if (inputPassWord.value === '' || inputPassWord.value === '') {
+      showErrorMessage('Please input first')
       console.log('Please input first')
     }
 
     const tmp = await useSQL('SELECT', [inputUserName.value])
     if (tmp.length > 0) {
+      showErrorMessage('You already have an account? Sign in')
       console.log('You already have an account? Sign in')
       loading.value = false
       return
     }
     const result = await useSQL('INSERT', value)
     if (result['affectedRows'] === 1) {
+      showSuccessMessage('Register successful')
       console.log('Register successfully')
     } else {
+      showErrorMessage('Register failed')
       console.log('Register failed')
     }
   }

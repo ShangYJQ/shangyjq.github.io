@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const POST_URL = 'http://localhost:29999/api'
+const POST_URL = 'http://116.62.79.107:29999/api'
 
 const template
   = {
