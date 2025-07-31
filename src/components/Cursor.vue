@@ -6,9 +6,45 @@
   import { onMounted } from 'vue'
 
   onMounted(() => {
-    // 定义 Circle 类，用于创建单个粒子
+    // --- 类型定义 ---
+    interface Point {
+      x: number
+      y: number
+    }
+
+    interface Area {
+      width: number
+      height: number
+    }
+
+    interface CircleConstructorParams {
+      origin: Point
+      speed: number
+      color: string
+      angle: number
+      context: CanvasRenderingContext2D
+    }
+
+    interface BoomConstructorParams {
+      origin: Point
+      context: CanvasRenderingContext2D
+      area: Area
+      circleCount?: number
+    }
+
+    // --- Class 定义 ---
+
     class Circle {
-      constructor ({ origin, speed, color, angle, context }) {
+      // 明确声明所有类属性及其类型
+      origin: Point
+      position: Point
+      color: string
+      speed: number
+      angle: number
+      context: CanvasRenderingContext2D
+      renderCount: number
+
+      constructor ({ origin, speed, color, angle, context }: CircleConstructorParams) {
         this.origin = origin
         this.position = { ...this.origin }
         this.color = color
@@ -18,25 +54,30 @@
         this.renderCount = 0
       }
 
-      // 绘制粒子
-      draw () {
+      draw (): void {
         this.context.fillStyle = this.color
         this.context.beginPath()
         this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
         this.context.fill()
       }
 
-      // 移动粒子
-      move () {
-        this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
-        this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+      move (): void {
+        this.position.x = Math.sin(this.angle) * this.speed + this.position.x
+        this.position.y = Math.cos(this.angle) * this.speed + this.position.y + this.renderCount * 0.3
         this.renderCount++
       }
     }
 
-    // 定义 Boom 类，用于管理一次爆炸效果
     class Boom {
-      constructor ({ origin, context, circleCount = 50, area }) {
+      // 明确声明所有类属性及其类型
+      origin: Point
+      context: CanvasRenderingContext2D
+      circleCount: number
+      area: Area
+      stop: boolean
+      circles: Circle[]
+
+      constructor ({ origin, context, circleCount = 50, area }: BoomConstructorParams) {
         this.origin = origin
         this.context = context
         this.circleCount = circleCount
@@ -45,26 +86,21 @@
         this.circles = []
       }
 
-      // 从数组中随机选择一个元素
-      randomArray (range) {
-        const length = range.length
-        const randomIndex = Math.floor(length * Math.random())
+      randomArray<T>(range: T[]): T {
+        const randomIndex = Math.floor(range.length * Math.random())
         return range[randomIndex]
       }
 
-      // 生成随机颜色
-      randomColor () {
+      randomColor (): string {
         const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
         return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
       }
 
-      // 生成指定范围内的随机数
-      randomRange (start, end) {
+      randomRange (start: number, end: number): number {
         return (end - start) * Math.random() + start
       }
 
-      // 初始化爆炸效果，创建所有粒子
-      init () {
+      init (): void {
         for (let i = 0; i < this.circleCount; i++) {
           const circle = new Circle({
             context: this.context,
@@ -77,48 +113,51 @@
         }
       }
 
-      // 移动所有粒子
-      move () {
+      move (): void {
         for (const [index, circle] of this.circles.entries()) {
-          // 如果粒子超出边界，则移除
           if (circle.position.x > this.area.width || circle.position.y > this.area.height) {
             this.circles.splice(index, 1)
             continue
           }
           circle.move()
         }
-        // 如果所有粒子都消失了，则停止动画
         if (this.circles.length === 0) {
           this.stop = true
         }
       }
 
-      // 绘制所有粒子
-      draw () {
+      draw (): void {
         for (const circle of this.circles) {
           circle.draw()
         }
       }
     }
 
-    // 定义 CursorSpecialEffects 类，管理整个特效
     class CursorSpecialEffects {
+      // 明确声明所有类属性及其类型
+      computerCanvas: HTMLCanvasElement
+      renderCanvas: HTMLCanvasElement
+      computerContext: CanvasRenderingContext2D | null
+      renderContext: CanvasRenderingContext2D | null
+      globalWidth: number
+      globalHeight: number
+      booms: Boom[]
+      running: boolean
+
       constructor () {
         this.computerCanvas = document.createElement('canvas')
         this.renderCanvas = document.createElement('canvas')
-
         this.computerContext = this.computerCanvas.getContext('2d')
         this.renderContext = this.renderCanvas.getContext('2d')
-
         this.globalWidth = window.innerWidth
         this.globalHeight = window.innerHeight
-
         this.booms = []
         this.running = false
       }
 
-      // 处理鼠标点击事件
-      handleMouseDown (e) {
+      handleMouseDown (e: MouseEvent): void {
+        if (!this.computerContext) return // 安全检查
+
         const boom = new Boom({
           origin: { x: e.clientX, y: e.clientY },
           context: this.computerContext,
@@ -129,26 +168,30 @@
         })
         boom.init()
         this.booms.push(boom)
-        // 如果动画未运行，则启动
-        this.running || this.run()
+        if (!this.running) {
+          this.run()
+        }
       }
 
-      // 处理页面隐藏事件
-      handlePageHide () {
+      handlePageHide (): void {
         this.booms = []
         this.running = false
       }
 
-      // 初始化 Canvas 和事件监听
-      init () {
+      init (): void {
         const style = this.renderCanvas.style
         style.position = 'fixed'
-        style.top = style.left = 0
+        style.top = '0'
+        style.left = '0'
         style.zIndex = '999999999999999'
         style.pointerEvents = 'none'
 
-        style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
-        style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+        style.width = this.globalWidth + 'px'
+        this.renderCanvas.width = this.globalWidth
+        this.computerCanvas.width = this.globalWidth
+        style.height = this.globalHeight + 'px'
+        this.renderCanvas.height = this.globalHeight
+        this.computerCanvas.height = this.globalHeight
 
         document.body.append(this.renderCanvas)
 
@@ -156,11 +199,17 @@
         window.addEventListener('pagehide', this.handlePageHide.bind(this))
       }
 
-      // 动画循环
-      run () {
-        this.running = true
+      run (): void {
         if (this.booms.length === 0) {
-          return this.running = false
+          this.running = false
+          return
+        }
+        this.running = true
+
+        // 安全检查
+        if (!this.computerContext || !this.renderContext) {
+          this.running = false
+          return
         }
 
         requestAnimationFrame(this.run.bind(this))
@@ -187,5 +236,5 @@
 </script>
 
 <style scoped>
-/* 样式与 Vue 2 版本相同 */
+/* 你的样式保持不变 */
 </style>

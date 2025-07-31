@@ -10,7 +10,6 @@
   const store = useAppStore()
 
   const sakuraCount = computed(() => {
-    console.log('flower:', store.flower)
     return store.flower
   })
 
@@ -44,19 +43,17 @@
       cxt.save()
       cxt.translate(this.x, this.y)
       cxt.rotate(this.r)
-      // 根据大小绘制图片
       cxt.drawImage(img, 0, 0, 40 * this.s, 40 * this.s)
       cxt.restore()
     }
 
     update (): void {
       this.x = this.fn.x(this.x, this.y)
-      this.y = this.fn.y(this.y, this.y) // 注意：原始代码这里都是y，保留此行为
+      this.y = this.fn.y(this.y, this.y)
       this.r = this.fn.r(this.r)
 
-      // 如果花瓣超出边界，则重置其位置
       if (this.x > window.innerWidth || this.x < 0 || this.y > window.innerHeight || this.y < 0) {
-        this.r = getRandom('fnr')(this.r) // 使用新的随机旋转函数
+        this.r = getRandom('fnr')(this.r)
         if (Math.random() > 0.4) {
           this.x = getRandom('x')
           this.y = 0
@@ -100,8 +97,9 @@
   function getRandom (option: 'x' | 'y' | 's' | 'r'): number
   function getRandom (option: 'fnx' | 'fny'): (a: number, b: number) => number
   function getRandom (option: 'fnr'): (r: number) => number
-  function getRandom (option: string): any { // 实现签名使用 any 或联合类型
-    let ret, random
+  function getRandom (option: string): any {
+    // **已修复**: `ret` 变量被明确赋予 `any` 类型，因为它可能返回不同类型的值。
+    let ret: any
     switch (option) {
       case 'x': {
         ret = Math.random() * window.innerWidth
@@ -120,17 +118,20 @@
         break
       }
       case 'fnx': {
-        random = -0.5 + Math.random() * 1
+        // **已修复**: 将 `random` 声明在 case 内部，TypeScript 能立即推断其为 number 类型
+        const random = -0.5 + Math.random() * 1
         ret = (x: number, y: number) => x + 0.5 * random - 1.7
         break
       }
       case 'fny': {
-        random = 1.5 + Math.random() * 0.7
+        // **已修复**: 同上
+        const random = 1.5 + Math.random() * 0.7
         ret = (x: number, y: number) => y + random
         break
       }
       case 'fnr': {
-        random = Math.random() * 0.03
+        // **已修复**: 同上
+        const random = Math.random() * 0.03
         ret = (r: number) => r + random
         break
       }
