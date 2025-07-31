@@ -13,6 +13,7 @@ declare module 'vue' {
     Cursor: typeof import('./components/Cursor.vue')['default']
     FollowCursor: typeof import('./components/FollowCursor.vue')['default']
     FrostedGlassPanel: typeof import('./components/FrostedGlassPanel.vue')['default']
+    Login: typeof import('./components/Login.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sakura: typeof import('./components/Sakura.vue')['default']
