@@ -9,10 +9,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    AudioPlayer: typeof import('./components/audioPlayer.vue')['default']
     FrostedGlassPanel: typeof import('./components/FrostedGlassPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SilderAlert: typeof import('./components/silderAlert.vue')['default']
-    SilderAllert: typeof import('./components/silderAllert.vue')['default']
   }
 }

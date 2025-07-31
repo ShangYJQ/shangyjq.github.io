@@ -134,6 +134,7 @@
       console.log('Login')
       loading.value = false
       appStore.isLoggedIn = true
+      appStore.username = inputUserName.value
       await router.push('/main')
     } else {
       loading.value = false

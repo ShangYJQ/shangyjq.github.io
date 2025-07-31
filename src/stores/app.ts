@@ -5,5 +5,6 @@ export const useAppStore = defineStore('app', {
   state: () => ({
     //
     isLoggedIn: false,
+    username: '',
   }),
 })
