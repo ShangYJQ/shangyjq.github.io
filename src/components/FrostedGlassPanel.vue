@@ -34,6 +34,14 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
+  import { useAppStore } from '@/stores/app.js'
+
+  const store = useAppStore()
+
+  const blur = computed(() => {
+    return store.bgBlur
+  })
+
   const props = defineProps({
     bgSrc: {
       type: String,
@@ -43,13 +51,9 @@
       type: String,
       default: 'Background Image',
     },
-    blur: {
-      type: Number,
-      default: 10,
-    },
     overlayColor: {
       type: String,
-      default: 'rgba(21,21,21,0.25)',
+      default: 'rgba(19,19,19,0.19)',
     },
     width: {
       type: String,

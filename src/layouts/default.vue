@@ -2,7 +2,7 @@
   <v-main>
     <FrostedGlassPanel
       alt="Background"
-      :bg-src="imgSrc"
+      :bg-src="webBg"
       height="100%"
       width="100%"
     >
@@ -13,13 +13,18 @@
 
   </v-main>
   <AppFooter />
+
+  <cursor />
+  <Followcursor />
+  <Sakura />
 </template>
 
 <script lang="ts" setup>
 // Import静态资源
 
-  import { getAssetsFile } from '@/utils/pub-use.ts'
-
-  const imgSrc = getAssetsFile('alpha.png')
+  import webBg from '@/assets/1.webp'
+  import cursor from '@/components/Cursor.vue'
+  import Followcursor from '@/components/FollowCursor.vue'
+  import Sakura from '@/components/Sakura.vue'
 
 </script>

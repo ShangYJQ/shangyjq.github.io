@@ -66,12 +66,15 @@
 //
 
   import { mdiAccountPlusOutline, mdiLogin } from '@mdi/js'
-  import { ref, watch } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import SliderAlert from '@/components/silderAlert.vue'
 
   import useSQL from '@/hooks/useSQL.ts'
 
+  import { changeBlurTo, changeFlowerTo } from '@/hooks/useTranslateTo.ts'
+
+  import stores from '@/stores'
   import { useAppStore } from '@/stores/app.ts'
 
   const inputUserName = ref<string>('')
@@ -170,6 +173,11 @@
   watch(loading, val => {
     if (!val) return
     setTimeout(() => (loading.value = false), 5000)
+  })
+
+  onMounted(() => {
+    changeBlurTo(100, 4000)
+    changeFlowerTo(0, 10)
   })
 
 </script>

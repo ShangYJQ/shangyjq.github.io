@@ -28,7 +28,7 @@
 <script setup lang="ts">
   import { mdiPause, mdiPlay, mdiVolumeHigh, mdiVolumeMedium, mdiVolumeOff } from '@mdi/js'
   import { computed, ref } from 'vue'
-  import audioFile from '@/assets/audio/major.flac'
+  import audioFile from '@/assets/audio/Listening-for-the-Weather.mp3'
 
   const audioPlayer = ref<HTMLAudioElement | null>(null)
   const audioSrc = ref(audioFile)
