@@ -1,9 +1,9 @@
 <template>
 
-  <div class="d-flex flex-fill fill-height">
+  <div class="d-flex flex-fill fill-height flex-column">
     <SliderAlert ref="alertRef" />
-    <p class="mt-8 text-h4">
-      Hello {{ username }}
+    <p class="text-h4 font-weight-bold text-gradient">
+      Hello, {{ username }}
     </p>
 
   </div>
@@ -12,14 +12,15 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeMount, onMounted, ref } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { onMounted, ref } from 'vue'
 
   import audioPlayer from '@/components/audioPlayer.vue'
 
   import SliderAlert from '@/components/silderAlert.vue'
 
+  import Lover from '@/components/toLover.vue'
   import { changeBlurTo, changeFlowerTo } from '@/hooks/useTranslateTo.ts'
+
   import { useAppStore } from '@/stores/app.ts'
 
   const alertRef = ref<InstanceType<typeof SliderAlert> | null>(null)
@@ -35,26 +36,28 @@
     }
   }
 
-  const router = useRouter()
   const store = useAppStore()
 
   const username = store.username
 
-  onBeforeMount(() => {
-    if (!store.isLoggedIn) {
-      router.replace('/')
-      console.log('Please login first')
-    }
-  })
-
   onMounted(() => {
     showSuccessMessage('Login success')
-    changeFlowerTo(15, 50_000)
+    changeFlowerTo(20, 50_000)
     changeBlurTo(0, 6000)
   })
 
 </script>
 
 <style scoped>
+.text-gradient {
+  background: linear-gradient(
+    to right,
+    #8e24aa, /* 紫色 */ #ff6e40 /* 橙色 */
+  );
 
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
 </style>

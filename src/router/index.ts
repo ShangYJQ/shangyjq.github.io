@@ -5,10 +5,14 @@
  */
 
 import { setupLayouts } from 'virtual:generated-layouts'
+
 // Composables
+// eslint-disable-next-line import/no-duplicates
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
 // eslint-disable-next-line import/no-duplicates
 import { routes } from 'vue-router/auto-routes'
+
+import { useAppStore } from '@/stores/app.ts'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -27,6 +31,16 @@ router.onError((err, to) => {
     }
   } else {
     console.error(err)
+  }
+})
+
+// 防止未登录的授权
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+router.beforeEach((to, from) => {
+  const isLoggedIn = useAppStore().isLoggedIn
+  if (!isLoggedIn && to.name !== '/') {
+    console.log('被重定向了')
+    return { name: '/' }
   }
 })
 

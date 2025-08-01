@@ -18,5 +18,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Sakura: typeof import('./components/Sakura.vue')['default']
     SilderAlert: typeof import('./components/silderAlert.vue')['default']
+    ToLover: typeof import('./components/toLover.vue')['default']
   }
 }

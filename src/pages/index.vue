@@ -34,7 +34,7 @@
   import { changeBlurTo, changeFlowerTo } from '@/hooks/useTranslateTo.ts'
 
   onMounted(() => {
-    changeBlurTo(100, 4000)
+    changeBlurTo(100, 10_000)
     changeFlowerTo(0, 10)
   })
 
