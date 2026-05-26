@@ -29,9 +29,6 @@ C++11 引入了 `std::thread`，而 C++20 则带来了更安全、更智能的 `
 下面是使用 `std::thread` 的基本示例。注意我们必须手动管理它的生命周期：
 
 ```cpp
-// Create by ShangYJQ.
-// 2026-05-24
-
 #include <iostream>
 #include <thread>
 
@@ -75,9 +72,6 @@ end
 下面的代码演示了如何使用 `std::stop_token` 来安全地停止一个正在运行的后台线程：
 
 ```cpp
-// Create by ShangYJQ.
-// 2026-05-24
-
 #include <chrono>
 #include <print>
 #include <stop_token>
@@ -153,9 +147,6 @@ stopped
 直接在函数指针或者 `lambda` 后面加要传入的参数就行
 
 ```cpp
-// Create by ShangYJQ.
-// 2026-05-25
-
 #include <print>
 #include <thread>
 
@@ -186,24 +177,21 @@ error: static assertion failed due to requirement
 'is_invocable_v<(lambda), int> || is_invocable_v<(lambda), std::stop_token, int>'
 ```
 
-::: warning 报错在说什么？
+::: info 报错在说什么？
 这段报错其实是编译器在抱怨：**“类型匹配失败，我没法调用这个函数！”**
 
 它尝试了两种 `jthread` 的传参策略，都失败了：
 
-1. **`is_invocable_v<(lambda), int>`：** 尝试直接传 `int` 拷贝。但你的 Lambda 想要的是 `int&`（引用），**拷贝的值不能绑定到普通引用上**，失败
-2. **`is_invocable_v<(lambda), std::stop_token, int>`：** 再次尝试把 `stop_token` 一起塞进去。但你的 Lambda 只有一个参数，数量对不上，再次失败
+1. **`is_invocable_v<(lambda), int>`：** 尝试直接传 `int` 拷贝。但 Lambda 想要的是 `int&`（引用），**拷贝的值不能绑定到普通引用上**，失败
+2. **`is_invocable_v<(lambda), std::stop_token, int>`：** 再次尝试把 `stop_token` 一起塞进去。但 Lambda 只有一个参数，数量对不上，再次失败
 
 :::
 
-为了保证线程安全，防止多个线程不小心改乱同一个变量，`jthread`（或 `thread`）的默认策略是：不管你的线程函数想要什么参数，我都会在底层强行“拷贝（Copy）”一份
+为了保证线程安全，防止多个线程不小心改乱同一个变量，`jthread`（或 `thread`）的默认策略是：不管线程函数想要什么参数，我都会在底层强行“拷贝（Copy）”一份
 **所有参数默认都会被拷贝（Copy）到新线程的空间中。**
 如果你想按引用传递，必须使用 `<functional>` 库中的 `std::ref()` 来显式包装
 
 ```cpp
-// Create by ShangYJQ.
-// 2026-05-25
-
 #include <functional>
 #include <print>
 #include <thread>
