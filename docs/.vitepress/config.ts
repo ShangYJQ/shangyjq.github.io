@@ -4,27 +4,38 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
 	title: "ShangYJQ's Blog",
 	description: "ShangYJQ 的个人博客",
+	lang: 'zh-CN',
 	appearance: "dark",
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
-			{ text: 'Home', link: '/' },
-			{ text: 'Examples', link: '/markdown-examples' }
+			{ text: '首页', link: '/' },
+			{ text: 'C++ 系列', link: '/posts/cpp-async' }
 		],
 
 		sidebar: [
 			{
-				text: 'Examples',
+				text: 'C++ 系列',
 				items: [
-					{ text: 'Markdown Examples', link: '/markdown-examples' },
-					{ text: 'Runtime API Examples', link: '/api-examples' }
+					{ text: 'C++ 异步编程入门', link: '/posts/cpp-async' }
 				]
 			}
 		],
 
 		socialLinks: [
 			{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-		]
+		],
+
+		docFooter: {
+			prev: '上一篇',
+			next: '下一篇'
+		},
+
+		outline: {
+			level: [2, 3],
+			label: '本页目录'
+		},
+
 	}
 })
 

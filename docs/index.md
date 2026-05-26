@@ -1,22 +1,19 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
   name: "ShangYJQ's Blog"
   text: "ShangYJQ 的个人博客"
-  tagline: My great project tagline
+  tagline: "探索现代编程"
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 开始阅读
+      link: /posts/cpp-async
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: GitHub
+      link: https://github.com/ShangYJQ
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: C++ 异步编程
+    details: 从 std::async 到协程 ，深入理解现代 C++ 并发模型
 ---
