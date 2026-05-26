@@ -11,8 +11,8 @@ date: 2026-05-25
 
 C++11 引入了 `std::thread`，而 C++20 则带来了更安全、更智能的 `std::jthread`。
 
-- **`std::thread`（手动挡）：** 就像是你雇佣了一个短工。你必须明确交代他是干完活向你交差（`join`），还是让他自己干完就走人（`detach`）。如果你忘记了交代，程序在结束时会直接崩溃（触发 `std::terminate`）。
-- **`std::jthread`（自动挡）：** 现代 C++ 的推荐选择。它像是一个训练有素的员工，带有 RAII 属性，下班（作用域结束）时会自动等待任务完成。不仅如此，它还自带了“对讲机”（`std::stop_token`），你可以随时呼叫他提前结束工作。
+- **`std::thread`：** 就像是你雇佣了一个短工。你必须明确交代他是干完活向你交差（`join`），还是让他自己干完就走人（`detach`）。如果你忘记了交代，程序在结束时会直接崩溃（触发 `std::terminate`）。
+- **`std::jthread`（推荐使用）：** 现代 C++ 的推荐选择。它像是一个训练有素的员工，带有 RAII 属性，下班（作用域结束）时会自动等待任务完成。不仅如此，它还自带了“对讲机”（`std::stop_token`），你可以随时呼叫他提前结束工作。
 
 ::: info 什么是 RAII
 **RAII**（Resource Acquisition Is Initialization，资源获取即初始化）是现代 C++ 的核心管理思想。
@@ -24,7 +24,7 @@ C++11 引入了 `std::thread`，而 C++20 则带来了更安全、更智能的 `
 所以说 `std::jthread` 带有 RAII 属性，就是因为它的析构函数里写好了自动退出的逻辑，只要它自己生命周期结束了，就会自动帮你善后，不需要你去手动写 `join()`。
 :::
 
-## 使用：`std::thread`
+## 使用 `std::thread`:
 
 下面是使用 `std::thread` 的基本示例。注意我们必须手动管理它的生命周期：
 
@@ -68,7 +68,7 @@ end
 [Process exited 0]
 ```
 
-## 现代的thread：`std::jthread` 与中断机制
+## 现代的thread `std::jthread` 与中断机制:
 
 在现代 C++ 开发中，我们更倾向于使用 `std::jthread`。它不仅解决了忘记 `join` 导致的崩溃问题，还引入了优雅的协作式中断机制（Cooperative Cancellation）。
 
@@ -147,3 +147,95 @@ stopped
 [Process exited 0]
 
 ```
+
+## 运行带有参数的函数:
+
+直接在函数指针或者 `lambda` 后面加要传入的参数就行
+
+```cpp
+// Create by ShangYJQ.
+// 2026-05-25
+
+#include <print>
+#include <thread>
+
+signed main() {
+	int val = 0;
+
+	std::jthread t2([](int v) { std::println("{}", v); }, val);
+
+	t2.join();
+
+	std::println("Result: {}", val);
+
+	return 0;
+}
+
+```
+
+但是要是我想引用传递呢？
+
+```cpp
+std::jthread t2([](int &v) { v = 100; }, val);
+```
+
+编译器报错：
+
+```text
+error: static assertion failed due to requirement
+'is_invocable_v<(lambda), int> || is_invocable_v<(lambda), std::stop_token, int>'
+```
+
+::: warning 报错在说什么？
+这段报错其实是编译器在抱怨：**“类型匹配失败，我没法调用这个函数！”**
+
+它尝试了两种 `jthread` 的传参策略，都失败了：
+
+1. **`is_invocable_v<(lambda), int>`：** 尝试直接传 `int` 拷贝。但你的 Lambda 想要的是 `int&`（引用），**拷贝的值不能绑定到普通引用上**，失败
+2. **`is_invocable_v<(lambda), std::stop_token, int>`：** 再次尝试把 `stop_token` 一起塞进去。但你的 Lambda 只有一个参数，数量对不上，再次失败
+
+:::
+
+::: danger 警告：
+为了保证线程安全，防止多个线程不小心改乱同一个变量，`jthread`（或 `thread`）的默认策略是：不管你的线程函数想要什么参数，我都会在底层强行“拷贝（Copy）”一份
+**所有参数默认都会被拷贝（Copy）到新线程的空间中。**
+如果你想按引用传递，必须使用 `<functional>` 库中的 `std::ref()` 来显式包装
+:::
+
+```cpp
+// Create by ShangYJQ.
+// 2026-05-25
+
+#include <functional>
+#include <print>
+#include <thread>
+
+signed main() {
+	int val = 0;
+
+	std::jthread t2([](int &v) { v = 100; }, std::ref(val));
+
+	t2.join();
+
+	std::println("Result: {}", val);
+
+	return 0;
+}
+```
+
+运行结果:
+
+```text
+Result: 100
+
+[Process exited 0]
+```
+
+::: danger 悬垂引用的致命危险
+使用 std::ref 相当于赋予了子线程极大的权力
+
+如果你用 std::ref 传递了一个局部变量给子线程，你必须绝对保证：主线程里的这个变量活得比子线程久
+如果主线程运行结束，局部变量被销毁回收了，而子线程还在傻乎乎地往那个内存地址写数据，程序就会立刻崩溃（段错误 Segfault）
+
+幸运的是，我们使用的是带有 RAII 自动等待功能的 std::jthread，它在离开作用域前一定会等待子线程执行完毕，所以完美地规避了这种内存越界访问的风险。但如果你使用的是老式的 std::thread 加上 detach()，那这就是一个随时会引爆的定时炸弹了。
+:::
