@@ -21,9 +21,11 @@ export default defineConfig({
 
 		sidebar: [
 			{
-				text: 'C++ 系列',
+				text: 'C++ 异步编程入门',
 				items: [
-					{ text: 'C++ 异步编程入门', link: '/posts/cpp-async' }
+					{ text: 'async的使用', link: '/posts/cpp-async' },
+					{ text: 'thread和jthread', link: '/posts/cpp-thread' },
+
 				]
 			}
 		],
