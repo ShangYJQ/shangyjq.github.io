@@ -6,6 +6,12 @@ export default defineConfig({
 	description: "ShangYJQ 的个人博客",
 	lang: 'zh-CN',
 	appearance: "dark",
+	markdown: {
+		theme: {
+			light: "catppuccin-latte",
+			dark: "catppuccin-mocha",
+		},
+	},
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
