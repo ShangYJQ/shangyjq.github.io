@@ -1,4 +1,17 @@
-/* docs/.vitepress/theme/custom.css */
+/* HarmonyOS Sans SC 中文字体 */
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  src: url("/fonts/HarmonyOS_SansSC_Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC";
+  src: url("/fonts/HarmonyOS_SansSC_Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "CaskaydiaCove NF Mono";
@@ -44,5 +57,6 @@
 
 /* 覆盖 VitePress 代码块字体 */
 :root {
+  --vp-font-family-base: "HarmonyOS Sans SC", sans-serif;
   --vp-font-family-mono: "CaskaydiaCove NF Mono", monospace;
 }
