@@ -155,16 +155,21 @@ signed main() {
 
 	std::jthread t2([](int v) { std::println("{}", v); }, val);
 
-	t2.join();
-
-	std::println("Result: {}", val);
-
 	return 0;
 }
-
 ```
 
-但是要是我想引用传递呢？
+结果如下
+
+```text
+0
+
+[Process exited 0]
+```
+
+但是要是我想引用传递呢？比如修改一个变量？
+
+直接修改函数，变成引用
 
 ```cpp
 std::jthread t2([](int &v) { v = 100; }, val);
@@ -178,7 +183,7 @@ error: static assertion failed due to requirement
 ```
 
 ::: info 报错在说什么？
-这段报错其实是编译器在抱怨：**“类型匹配失败，我没法调用这个函数！”**
+这段报错其实是编译器在抱怨：**“类型匹配失败，没法调用这个函数”**
 
 它尝试了两种 `jthread` 的传参策略，都失败了：
 
@@ -187,8 +192,8 @@ error: static assertion failed due to requirement
 
 :::
 
-为了保证线程安全，防止多个线程不小心改乱同一个变量，`jthread`（或 `thread`）的默认策略是：不管线程函数想要什么参数，我都会在底层强行“拷贝（Copy）”一份
-**所有参数默认都会被拷贝（Copy）到新线程的空间中。**
+实际上，cpp默认为了保证线程安全，防止多个线程不小心改乱同一个变量，`jthread`（或 `thread`）的默认策略是：不管线程函数想要什么参数，我都会在底层强行“拷贝”一份
+**所有参数默认都会被拷贝到新线程的空间中。**
 如果你想按引用传递，必须使用 `<functional>` 库中的 `std::ref()` 来显式包装
 
 ```cpp
