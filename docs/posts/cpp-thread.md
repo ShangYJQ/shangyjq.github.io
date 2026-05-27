@@ -230,3 +230,9 @@ Result: 100
 
 幸运的是，我们使用的是带有 RAII 自动等待功能的 `std::jthread`，它在离开作用域前一定会等待子线程执行完毕，所以完美地规避了这种内存越界访问的风险。但如果你使用的是老式的 `std::thread` 加上 detach()，那这就是一个随时会引爆的定时炸弹了。
 :::
+
+## 参考资料
+
+- [`std::thread` - cppreference](https://cppreference.cn/w/cpp/thread/thread)
+- [`std::jthread` - cppreference](https://cppreference.cn/w/cpp/thread/jthread)
+- [`std::stop_token` - cppreference](https://cppreference.cn/w/cpp/thread/stop_token)
