@@ -25,6 +25,7 @@ export default defineConfig({
 				items: [
 					{ text: 'async的使用', link: '/posts/cpp-async' },
 					{ text: 'thread和jthread', link: '/posts/cpp-thread' },
+					{ text: '数据竞争与 std::mutex', link: '/posts/cpp-mutex' },
 
 				]
 			}
